@@ -1,6 +1,7 @@
 const response = require('../response')
 const db = require('../settings/db')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 exports.getAllUsers = (req, res) => {
 
@@ -16,7 +17,6 @@ exports.getAllUsers = (req, res) => {
 }
 
 exports.signup = (req, res) => {
-
     db.query("SELECT `id`, `email`, `name` FROM `users` WHERE `email`='" + req.body.email + "'", (error, rows, field) => {
         if (error) {
             response.status(404, res)
@@ -27,8 +27,6 @@ exports.signup = (req, res) => {
                 response.status(404, { message: `Пользователь с таким email- ${rw.email} уже есть` }, res)
                 return true
             })
-
-
         }
         else {
             const email = req.body.email
@@ -49,9 +47,36 @@ exports.signup = (req, res) => {
         }
 
     })
+}
 
 
+exports.signin = (req, res) => {
 
+    db.query("SELECT `id`, `email`, `password` FROM `users` WHERE `email`='" + req.body.email + "'", (error, rows, fields) => {
+        if (error) {
+            response.status(404, error, res)
+        }
+        else if (rows.length <= 0) {
+            response.status(404, { message: `Пользователь с email - ${req.body.email} не найден` }, res)
+        }
+        else {
+            const row = JSON.parse(JSON.stringify(rows))
+            row.map(rw => {
+                const password = bcrypt.compareSync(req.body.password, rw.password)
+                if (password) {
+                    const token = jwt.sign({
+                        userId: rw.id,
+                        email: rw.email
+                    }, 'jwt-key', { expiresIn: 120 * 120 })
+                    response.status(200, { token: `Bearer ${token}` }, res)
+                } else {
+                    response.status(404, { message: 'Пароль не верный' }, res)
+                }
+                return true
+            })
+
+        }
+    })
 
 
 }
