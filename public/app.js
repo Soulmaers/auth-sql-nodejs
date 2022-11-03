@@ -1,13 +1,22 @@
 
 
-const input = document.querySelectorAll('.inp')
-console.log(input)
+// асинхронная функция
+async function SendForm(e) {
+    // останавливает действие по умолчанию
+    e.preventDefault();
 
-const button = document.querySelector('.btn')
+    // отправляем POST запрос на сервер
+    response = await fetch('api/auth/singup', {
+        method: 'POST',          // метод POST
+        body: new FormData(form) // в класс FormData передаем ссылку на форму
+    });
 
-button.addEventListener('submit', () => {
+    // получаем JSON
+    let result = await response.json();
 
-    input.forEach(el => {
-        console.log(el.value)
-    })
-})
+    console.log(result);
+};
+
+// при щелчке на кнопку отправки формы
+// отправляем форму на сервер
+form.onsubmit = SendForm;
