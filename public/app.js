@@ -1,22 +1,64 @@
 
 
-// асинхронная функция
-async function SendForm(e) {
-    // останавливает действие по умолчанию
+//const input = document.querySelectorAll('.input')
+/*
+const update = {
+    name: 'Alexis-2',
+    second_name: 'Uss2',
+    email: 'yyy1@ya.ru',
+    password: '12345'
+}
+
+
+fetch('/api/auth/signup', {
+    method: "POST",
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(update),
+})*/
+
+
+/*
+const options = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(new FormData(form)),
+};*/
+
+// Отправка данных формы
+
+let form = document.querySelector('.form')
+
+// Создадим объект FormData, в который добавим данные формы formAuth
+let formAuth = new FormData(form);
+// Преобразуем набор пар ключ/значение объекта FormData в формат JSON
+formAuth = JSON.stringify(Object.fromEntries(formAuth));
+// Заменим обработчик submit формы
+form.addEventListener("submit", function (e) {
+    // отключим поведение по умолчанию
     e.preventDefault();
 
-    // отправляем POST запрос на сервер
-    response = await fetch('api/auth/singup', {
-        method: 'POST',          // метод POST
-        body: new FormData(form) // в класс FormData передаем ссылку на форму
-    });
+    fetch('api/auth/signup', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: formAuth,
+    })
 
-    // получаем JSON
-    let result = await response.json();
-
-    console.log(result);
-};
-
-// при щелчке на кнопку отправки формы
-// отправляем форму на сервер
-form.onsubmit = SendForm;
+        // Отправим ответ в формате JSON (с правильным типом содержимого)
+        .then((res) => res.json())
+        .then((res) => {
+            // работа с результатом запроса (ответом сервера)
+            let user = res;
+            console.log(user);
+            // можно сохранить в localStorage, преобразовав в JSON...
+            localStorage.setItem("user", JSON.stringify(user));
+            // ... и извлечь, спарсив из JSON
+            user = localStorage.getItem("user");
+            console.log("user", JSON.parse(user));
+        }); // искомый ответ
+});
