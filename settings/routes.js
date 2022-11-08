@@ -20,6 +20,6 @@ module.exports = (app) => {
         .post(usersController.signup)
     app
         .route('/api/auth/signin')
-        .get(usersController.signin)
+        .post(usersController.signin)
 
 }

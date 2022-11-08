@@ -17,11 +17,12 @@ exports.getAllUsers = (req, res) => {
 }
 
 exports.signup = (req, res) => {
+    console.log(req.body)
     db.query("SELECT `id`, `email`, `name` FROM `users` WHERE `email`='" + req.body.email + "'", (error, rows, field) => {
         if (error) {
             response.status(404, res)
         } else if (typeof rows !== 'undefined' && rows.length > 0) {
-            //сonsole.log(rows)
+            // сonsole.log(rows)
             const row = JSON.parse(JSON.stringify(rows))
             row.map(rw => {
                 response.status(404, { message: `Пользователь с таким email- ${rw.email} уже есть` }, res)
@@ -51,7 +52,7 @@ exports.signup = (req, res) => {
 
 
 exports.signin = (req, res) => {
-
+    console.log(req.body)
     db.query("SELECT `id`, `email`, `password` FROM `users` WHERE `email`='" + req.body.email + "'", (error, rows, fields) => {
         if (error) {
             response.status(404, error, res)
