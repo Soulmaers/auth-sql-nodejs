@@ -103,22 +103,17 @@ function views(token) {
 
 
 function modals(list) {
-    document.createElement('div')
-    console.log(list)
-    list.map(elem => {
-        let element = document.createElement('ul')
-        element.className = 'users'
-        document.body.append(element)
-        let arLi = Object.entries(elem)
-
-        let ul = document.querySelectorAll('.users')
-
-        console.log(arLi)
-        // element.innerHTML = el
-        console.log(element)
-    })
-
+    for (let i = 0; i < list.length; i++) {
+        const ul = document.createElement('ul');
+        document.body.append(ul)
+        for (let key of Object.keys(list[i])) {
+            const li = document.createElement('li');
+            li.textContent = (key + " : " + list[i][key])
+            document.body.appendChild(li)
+        }
+    }
 }
+
 
 
 /*

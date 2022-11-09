@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 exports.getAllUsers = (req, res) => {
 
-    db.query('SELECT `id`, `name`, `second_name`, `email` FROM `users`', (error, rows, fields) => {
+    db.query('SELECT  `name`, `second_name`, `email` FROM `users`', (error, rows, fields) => {
         if (error) {
             response.status(404, error, res)
         }
