@@ -33,9 +33,9 @@ exports.signup = (req, res) => {
             const email = req.body.email
             const name = req.body.name
             const secondName = req.body.second_name !== '' ? req.body.second_name : ''
-            const salt = bcrypt.genSaltSync(15)
-            const password = bcrypt.hashSync(req.body.password, salt)
-
+            const password = req.body.password;
+            //const salt = bcrypt.genSaltSync(15)
+            // const password = bcrypt.hashSync(req.body.password, salt)
             const sql = "INSERT INTO `users`(`name`, `second_name`,`email`, `password`) VALUES('" + name + "', '" + secondName + "', '" + email + "', '" + password + "')"
             db.query(sql, (error, result) => {
                 if (error) {
@@ -63,13 +63,13 @@ exports.signin = (req, res) => {
         else {
             const row = JSON.parse(JSON.stringify(rows))
             row.map(rw => {
-                const password = bcrypt.compareSync(req.body.password, rw.password)
-                if (password) {
+                //const password =bcrypt.compareSync(req.body.password, rw.password)
+                if (req.body.password == rw.password) {
                     const token = jwt.sign({
                         userId: rw.id,
                         email: rw.email
                     }, 'jwt-key', { expiresIn: 120 * 120 })
-                    response.status(200, { token: `Bearer ${token}` }, res)
+                    response.status(200, { token: `Bearer ${token}`, message: 'Вы авторизованы' }, res)
                 } else {
                     response.status(404, { message: 'Пароль не верный' }, res)
                 }

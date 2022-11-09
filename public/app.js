@@ -46,19 +46,14 @@ form.addEventListener("submit", function (e) {
         },
         body: formAuth,
     })
-
-        // Отправим ответ в формате JSON (с правильным типом содержимого)
         .then((res) => res.json())
         .then((res) => {
-            // работа с результатом запроса (ответом сервера)
             let user = res;
-            console.log(user);
-            // можно сохранить в localStorage, преобразовав в JSON...
-            localStorage.setItem("user", JSON.stringify(user));
-            // ... и извлечь, спарсив из JSON
-            user = localStorage.getItem("user");
-            console.log("user", JSON.parse(user));
-        }); // искомый ответ
+            console.log(user.values.message);
+            // localStorage.setItem("user", JSON.stringify(user));
+            // user = localStorage.getItem("user");
+            // console.log("user", JSON.parse(user));
+        });
 });
 
 formin.addEventListener("submit", function (e) {
@@ -74,17 +69,65 @@ formin.addEventListener("submit", function (e) {
         },
         body: formAuth,
     })
-
-        // Отправим ответ в формате JSON (с правильным типом содержимого)
         .then((res) => res.json())
         .then((res) => {
-            // работа с результатом запроса (ответом сервера)
             let user = res;
             console.log(user);
-            // можно сохранить в localStorage, преобразовав в JSON...
-            localStorage.setItem("user", JSON.stringify(user));
-            // ... и извлечь, спарсив из JSON
-            user = localStorage.getItem("user");
-            console.log("user", JSON.parse(user));
-        }); // искомый ответ
+            // localStorage.setItem("user", JSON.stringify(user));
+            // user = localStorage.getItem("user");
+            console.log(user.values.message);
+            console.log(user.values.token);
+            views(user)
+            //console.log("user", JSON.parse(user));
+        })
+
 });
+
+
+function views(token) {
+    console.log(token)
+    fetch('api/users', {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token.values.token}`
+        }
+    })
+        .then((res) => res.json())
+        .then((res) => {
+            let user = res;
+            console.log(user);
+            modals(user.values)
+        })
+}
+
+
+function modals(list) {
+    document.createElement('div')
+    console.log(list)
+    list.map(elem => {
+        let element = document.createElement('ul')
+        element.className = 'users'
+        document.body.append(element)
+        let arLi = Object.entries(elem)
+
+        let ul = document.querySelectorAll('.users')
+
+        console.log(arLi)
+        // element.innerHTML = el
+        console.log(element)
+    })
+
+}
+
+
+/*
+let element = document.createElement('div')
+element.className = 'usersLis'
+element.innerHTML = 'Новый эелемент'
+document.body.append(element);
+
+let parent = document.querySelector('.div')
+let element2 = document.createElement('div')
+element2.innerHTML = 'Новый эелемент2'
+parent.appendChild(element2);*/
